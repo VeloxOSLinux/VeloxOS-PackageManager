@@ -1,70 +1,117 @@
-from PyQt6.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QListWidget
-from PyQt6.QtCore import QPropertyAnimation, QEasingCurve
+from PyQt6.QtWidgets import (
+    QMainWindow, QWidget, QHBoxLayout, QVBoxLayout,
+    QListWidget, QListWidgetItem, QPushButton, QSizePolicy
+)
+from PyQt6.QtCore import QPropertyAnimation, QEasingCurve, Qt
 from .package_list import PackageListWidget
 from .package_detail import PackageDetailWidget
 from functions.cachyos import CachyOSRepo
+from functions.flathub import FlathubRepo
+from functions.aur import AURRepo
+from .settings import SettingsDialog
 
 
 class MainWindow(QMainWindow):
-    """Hauptfenster mit animierter Detailansicht (Breitenanimation)."""
+    """Hauptfenster mit zweigeteilter Sidebar und Paketliste für CachyOS, AUR und Flathub."""
     def __init__(self):
         super().__init__()
         self.setWindowTitle("CachyOS Package Manager")
         self.resize(1000, 650)
 
+        # --- Zentralwidget + Hauptlayout ---
         central = QWidget(self)
         self.setCentralWidget(central)
-        layout = QHBoxLayout(central)
-        layout.setContentsMargins(0, 0, 0, 0)
+        main_layout = QHBoxLayout(central)
+        main_layout.setContentsMargins(10, 10, 10, 10)
+        main_layout.setSpacing(10)
 
-        # Seitenleiste
-        self.sidebar = QListWidget(self)
-        self.sidebar.addItems(["Entdecken", "CachyOS Repo", "Installiert", "Updates", "Einstellungen"])
-        self.sidebar.setFixedWidth(180)
-        layout.addWidget(self.sidebar)
+        # --- Sidebar Container ---
+        sidebar_container = QWidget()
+        sidebar_layout = QVBoxLayout(sidebar_container)
+        sidebar_layout.setContentsMargins(0, 0, 0, 0)
+        sidebar_layout.setSpacing(0)
+        sidebar_container.setFixedWidth(180)
 
-        # Container für Liste + Detail
-        self.container = QWidget(self)
-        container_layout = QHBoxLayout(self.container)
-        container_layout.setContentsMargins(0, 0, 0, 0)
-        container_layout.setSpacing(0)
-        layout.addWidget(self.container)
+        # --- Obere Sidebar: Navigation + Kategorien ---
+        self.top_sidebar = QListWidget()
+        self.top_sidebar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.top_sidebar.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
+        self.top_sidebar.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
-        # Paketliste
+        # Items oben
+        for t in ["Entdecken", "Installiert", "Updates"]:
+            item = QListWidgetItem(t)
+            item.setFlags(item.flags() | Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
+            self.top_sidebar.addItem(item)
+
+        # Trenner
+        item = QListWidgetItem("────────────")
+        item.setFlags(Qt.ItemFlag.NoItemFlags)
+        self.top_sidebar.addItem(item)
+
+        # Musterkategorien
+        for c in ["Musterkategorie1", "Musterkategorie2"]:
+            item = QListWidgetItem(c)
+            item.setFlags(item.flags() | Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
+            self.top_sidebar.addItem(item)
+
+        # Obere Sidebar wächst bis zum Button
+        self.top_sidebar.setMinimumHeight(0)
+        self.top_sidebar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sidebar_layout.addWidget(self.top_sidebar)
+
+        # --- Untere Sidebar: Einstellungen ---
+        self.settings_btn = QPushButton("Einstellungen")
+        self.settings_btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        sidebar_layout.addWidget(self.settings_btn)
+
+        # --- Paketliste ---
         self.pkg_list_widget = PackageListWidget(self)
-        container_layout.addWidget(self.pkg_list_widget)
+        self.pkg_list_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
-        # Detailansicht (startet unsichtbar)
+        # --- Detailbereich ---
         self.detail_widget = PackageDetailWidget(self)
         self.detail_widget.setFixedWidth(0)
-        container_layout.addWidget(self.detail_widget)
 
-        # Animation
+        # --- Layout links: Sidebar + Paketliste ---
+        left_container = QWidget()
+        left_layout = QHBoxLayout(left_container)
+        left_layout.setContentsMargins(0, 0, 0, 0)
+        left_layout.setSpacing(0)
+        left_layout.addWidget(sidebar_container)
+        left_layout.addWidget(self.pkg_list_widget)
+
+        # --- Hauptlayout ---
+        main_layout.addWidget(left_container)
+        main_layout.addWidget(self.detail_widget)
+
+        # --- Animation Detailbereich ---
         self.animation = QPropertyAnimation(self.detail_widget, b"maximumWidth")
         self.animation.setDuration(300)
         self.animation.setEasingCurve(QEasingCurve.Type.OutCubic)
-
-        # Repos initialisieren
-        self.cachyos_repo = CachyOSRepo()
-
-        # Sidebar-Aktionen
-        self.sidebar.currentItemChanged.connect(self.on_category_changed)
-        self.pkg_list_widget.list.itemClicked.connect(self.on_item_clicked)
-
-        # Zustand
-        self.detail_visible = False
         self.detail_target_width = 400
+        self.detail_visible = False
 
-        # Standardansicht: Entdecken (zeigt CachyOS-Pakete)
-        self.show_cachyos_packages()
+        # --- Repos ---
+        self.cachyos_repo = CachyOSRepo()
+        self.flathub_repo = FlathubRepo()
+        self.aur_repo = AURRepo()
 
-    def on_item_clicked(self, item):
-        pkg = item.data(0)
-        if not pkg:
+        # --- Signale ---
+        self.top_sidebar.currentItemChanged.connect(self.on_category_changed)
+        self.pkg_list_widget.list.itemClicked.connect(self.on_item_clicked)
+        self.settings_btn.clicked.connect(self.on_settings_clicked)
+
+        # --- Initial laden ---
+        self.show_all_packages()
+
+    # ----------------------------
+
+    def on_item_clicked(self, item, column):
+        pkg = item.data(0, Qt.ItemDataRole.UserRole)
+        if not isinstance(pkg, dict):
             return
-
         self.detail_widget.set_package(pkg)
-
         if not self.detail_visible:
             self.show_detail()
 
@@ -82,19 +129,47 @@ class MainWindow(QMainWindow):
         self.animation.start()
         self.detail_visible = False
 
+    # ----------------------------
+
     def on_category_changed(self, current, previous):
         if not current:
             return
 
         section = current.text()
-        if section == "CachyOS Repo":
-            self.show_cachyos_packages()
-        elif section == "Entdecken":
-            self.show_cachyos_packages()
-        else:
+        if section == "Entdecken":
+            self.show_all_packages()
+        elif section == "Installiert":
             self.pkg_list_widget.populate_packages([])
+        elif section == "Updates":
+            self.pkg_list_widget.populate_packages([])
+        else:
+            # Musterkategorien
+            self.pkg_list_widget.populate_packages([])
+
         self.hide_detail()
+
+    def on_settings_clicked(self):
+        dialog = SettingsDialog(self)
+        dialog.exec()
+
+    # ----------------------------
 
     def show_cachyos_packages(self):
         packages = self.cachyos_repo.get_available_packages()
+        self.pkg_list_widget.populate_packages(packages)
+
+    def show_flathub_packages(self):
+        packages = self.flathub_repo.get_available_packages()
+        self.pkg_list_widget.populate_packages(packages)
+
+    def show_aur_packages(self):
+        packages = self.aur_repo.get_available_packages()
+        self.pkg_list_widget.populate_packages(packages)
+
+    def show_all_packages(self):
+        """Entdecken: alle Pakete aus allen Repos laden."""
+        packages = []
+        packages += self.cachyos_repo.get_available_packages()
+        packages += self.flathub_repo.get_available_packages()
+        packages += self.aur_repo.get_available_packages()
         self.pkg_list_widget.populate_packages(packages)
