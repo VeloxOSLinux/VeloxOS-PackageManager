@@ -30,4 +30,11 @@ Da das Projekt noch in der Entwicklung ist, empfiehlt es sich, sich vorher mit d
 
 ## Lizenz
 
-Dieses Projekt wird unter der [MIT License](LICENSE) lizenziert.
+Dieses Projekt ist unter der **GNU General Public License v3.0 (GPLv3)** lizenziert.  
+Das bedeutet:
+
+- Jeder darf den Code verwenden, verändern und weiterverbreiten.
+- Abgeleitete Projekte müssen ebenfalls unter GPLv3 veröffentlicht werden.
+- Der ursprüngliche Urheber (APM – AnotherPackageManager) muss erwähnt werden.
+
+Die vollständige Lizenz findest du in der [LICENSE](LICENSE)-Datei.
