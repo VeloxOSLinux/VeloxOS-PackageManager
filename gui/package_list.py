@@ -1,11 +1,11 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QTreeWidget, QTreeWidgetItem
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QTreeWidget, QTreeWidgetItem, QLabel
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QIcon, QBrush, QColor
+from PyQt6.QtGui import QIcon, QBrush
 import os
 
 
 class PackageListWidget(QWidget):
-    """Paketliste mit Filterbuttons, Suchfeld und Icons (QTreeWidget-Version)."""
+    """Paketliste mit Filterbuttons, Suchfeld und Icons."""
     def __init__(self, parent=None):
         super().__init__(parent)
         self.icons_path = os.path.join(os.path.dirname(__file__), "..", "icons")
@@ -41,47 +41,37 @@ class PackageListWidget(QWidget):
         self.list.setColumnCount(2)
         self.list.setHeaderLabels(["Paket", "Quelle"])
         self.list.setAlternatingRowColors(True)
-        self.list.setStyleSheet("""
-            QTreeWidget::item {
-                padding-right: 10px;
-            }
-            QTreeWidget::item:hover {
-                background-color: rgba(255, 255, 255, 20%);
-            }
-        """)
-        # Spalten
-        self.list.header().setSectionResizeMode(0, self.list.header().ResizeMode.Stretch)
-        self.list.header().setSectionResizeMode(1, self.list.header().ResizeMode.Fixed)
-        self.list.header().resizeSection(1, 120)
-        self.list.header().setVisible(False)
-
         layout.addWidget(self.list)
+
+        # --- Paketanzahl unten ---
+        self.count_label = QLabel("0 Pakete", self)
+        layout.addWidget(self.count_label)
+
+        self.setLayout(layout)
 
     # ------------------------------
 
-    def populate_packages(self, packages):
-        """Liste neu füllen und Filter/Recherche anwenden."""
+    def set_packages(self, packages):
+        """Liste setzen und Filter/Recherche anwenden."""
         self.all_packages = packages
         self.refresh_list()
 
     def refresh_list(self):
-        """Filter + Suche anwenden."""
         self.list.clear()
         query = self.search_query.lower()
         active_filter = self.current_filter
+        count = 0
 
         for pkg in self.all_packages:
             name = pkg.get("name", "")
             source = pkg.get("source", "")
 
-            # Filter anwenden
             if active_filter != "Alle" and source != active_filter:
                 continue
             if query and query not in name.lower():
                 continue
 
-            # Icon bestimmen
-            icon_file = "default.png"
+            icon_file = "cachy.png"
             lname = name.lower()
             if "cachy" in lname:
                 icon_file = "cachy.png"
@@ -98,20 +88,17 @@ class PackageListWidget(QWidget):
 
             icon_path = os.path.join(self.icons_path, icon_file)
             if not os.path.exists(icon_path):
-                icon_path = os.path.join(self.icons_path, "default.png")
+                icon_path = os.path.join(self.icons_path, "cachy.png")
 
-            # TreeWidgetItem erstellen
             item = QTreeWidgetItem([name, source])
             item.setIcon(0, QIcon(icon_path))
             item.setData(0, Qt.ItemDataRole.UserRole, pkg)
 
-            # Quelle rechts ausrichten + leicht transparent
             item.setTextAlignment(1, Qt.AlignmentFlag.AlignRight)
-            color = self.list.palette().color(self.list.foregroundRole())
-            color.setAlpha(100)
-            item.setForeground(1, QBrush(color))
-
             self.list.addTopLevelItem(item)
+            count += 1
+
+        self.count_label.setText(f"{count} Pakete")
 
     # ------------------------------
 

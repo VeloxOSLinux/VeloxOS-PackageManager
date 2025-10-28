@@ -5,14 +5,15 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import QPropertyAnimation, QEasingCurve, Qt
 from .package_list import PackageListWidget
 from .package_detail import PackageDetailWidget
-from functions.cachyos import CachyOSRepo
-from functions.flathub import FlathubRepo
-from functions.aur import AURRepo
+from repos.cachyos import CachyOSRepo
+from repos.flathub import FlathubRepo
+from repos.aur import AURRepo
 from .settings import SettingsDialog
+from core.system_packages import get_installed_packages
 
 
 class MainWindow(QMainWindow):
-    """Hauptfenster mit zweigeteilter Sidebar und Paketliste für CachyOS, AUR und Flathub."""
+    """Hauptfenster mit Sidebar und Paketliste."""
     def __init__(self):
         super().__init__()
         self.setWindowTitle("CachyOS Package Manager")
@@ -38,7 +39,6 @@ class MainWindow(QMainWindow):
         self.top_sidebar.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
         self.top_sidebar.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
-        # Items oben
         for t in ["Entdecken", "Installiert", "Updates"]:
             item = QListWidgetItem(t)
             item.setFlags(item.flags() | Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
@@ -49,15 +49,12 @@ class MainWindow(QMainWindow):
         item.setFlags(Qt.ItemFlag.NoItemFlags)
         self.top_sidebar.addItem(item)
 
-        # Musterkategorien
+        # Dummy-Kategorien
         for c in ["Musterkategorie1", "Musterkategorie2"]:
             item = QListWidgetItem(c)
             item.setFlags(item.flags() | Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled)
             self.top_sidebar.addItem(item)
 
-        # Obere Sidebar wächst bis zum Button
-        self.top_sidebar.setMinimumHeight(0)
-        self.top_sidebar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sidebar_layout.addWidget(self.top_sidebar)
 
         # --- Untere Sidebar: Einstellungen ---
@@ -81,7 +78,6 @@ class MainWindow(QMainWindow):
         left_layout.addWidget(sidebar_container)
         left_layout.addWidget(self.pkg_list_widget)
 
-        # --- Hauptlayout ---
         main_layout.addWidget(left_container)
         main_layout.addWidget(self.detail_widget)
 
@@ -103,7 +99,7 @@ class MainWindow(QMainWindow):
         self.settings_btn.clicked.connect(self.on_settings_clicked)
 
         # --- Initial laden ---
-        self.show_all_packages()
+        self.top_sidebar.setCurrentRow(0)
 
     # ----------------------------
 
@@ -139,12 +135,14 @@ class MainWindow(QMainWindow):
         if section == "Entdecken":
             self.show_all_packages()
         elif section == "Installiert":
-            self.pkg_list_widget.populate_packages([])
+            installed = get_installed_packages()
+            self.pkg_list_widget.set_packages(installed)
         elif section == "Updates":
-            self.pkg_list_widget.populate_packages([])
+            # Update-Logik später
+            self.pkg_list_widget.set_packages([])
         else:
-            # Musterkategorien
-            self.pkg_list_widget.populate_packages([])
+            # Dummy-Kategorien
+            self.pkg_list_widget.set_packages([])
 
         self.hide_detail()
 
@@ -154,22 +152,9 @@ class MainWindow(QMainWindow):
 
     # ----------------------------
 
-    def show_cachyos_packages(self):
-        packages = self.cachyos_repo.get_available_packages()
-        self.pkg_list_widget.populate_packages(packages)
-
-    def show_flathub_packages(self):
-        packages = self.flathub_repo.get_available_packages()
-        self.pkg_list_widget.populate_packages(packages)
-
-    def show_aur_packages(self):
-        packages = self.aur_repo.get_available_packages()
-        self.pkg_list_widget.populate_packages(packages)
-
     def show_all_packages(self):
-        """Entdecken: alle Pakete aus allen Repos laden."""
         packages = []
         packages += self.cachyos_repo.get_available_packages()
         packages += self.flathub_repo.get_available_packages()
         packages += self.aur_repo.get_available_packages()
-        self.pkg_list_widget.populate_packages(packages)
+        self.pkg_list_widget.set_packages(packages)

@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtGui import QPixmap, QCursor
 from PyQt6.QtCore import Qt
 import os
+from core.db import get_package_description
 
 
 class ImageDialog(QDialog):
@@ -92,7 +93,6 @@ class PackageDetailWidget(QWidget):
         self.image_label.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.image_label.setMaximumHeight(200)
         layout.addWidget(self.image_label)
-
         self.image_label.mousePressEvent = self.show_full_image
 
         # --- Scrollbare Beschreibung ---
@@ -121,25 +121,28 @@ class PackageDetailWidget(QWidget):
         """Setzt alle Infos und Bild des Pakets."""
         name = pkg.get("name", "Unbekannt")
         source = pkg.get("source", "-")
-        desc = pkg.get("description", "")
 
         self.title.setText(name)
         self.source_label.setText(f"Quelle: {source}")
-        self.desc_label.setText(desc)
 
-        # Icon als Bild verwenden (Option A)
+        # Beschreibung aus DB nachladen (Lazy Loading)
+        desc = get_package_description(name, source)
+        self.desc_label.setText(desc or "Keine Beschreibung verfügbar.")
+
+        # Icon bestimmen
         icon_file = "default.png"
-        if "cachy" in name.lower():
+        lname = name.lower()
+        if "cachy" in lname:
             icon_file = "cachy.png"
-        elif "firefox" in name.lower():
+        elif "firefox" in lname:
             icon_file = "firefox.png"
-        elif "gimp" in name.lower():
+        elif "gimp" in lname:
             icon_file = "gimpicon.png"
-        elif "libre" in name.lower():
+        elif "libre" in lname:
             icon_file = "libreoffice.png"
-        elif "spotify" in name.lower():
+        elif "spotify" in lname:
             icon_file = "spotify.png"
-        elif "vscode" in name.lower():
+        elif "vscode" in lname:
             icon_file = "vscode.png"
 
         icon_path = os.path.join(self.icons_path, icon_file)
@@ -153,16 +156,10 @@ class PackageDetailWidget(QWidget):
         self.image_label.setPixmap(scaled_pixmap)
 
     # -------------------------------------------------------
-
     def show_full_image(self, event):
         """Öffnet Popup mit vergrößertem Bild."""
         if self.current_pixmap and not self.current_pixmap.isNull():
             dialog = ImageDialog(self.current_pixmap, self)
-            
-            # Frameless nur für dieses Öffnen
             dialog.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.Dialog)
-            
-            # Optional: transparenten Hintergrund, Lightbox-Effekt
             dialog.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-            
             dialog.show()
