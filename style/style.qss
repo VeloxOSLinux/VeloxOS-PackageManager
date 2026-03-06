@@ -1,0 +1,115 @@
+/* Globale Basis - Inspiriert durch das VeloxOS Logo */
+QWidget {
+    background-color: #0d1117; /* Deep Space Black */
+    color: #c9d1d9;
+    font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+/* Sidebar - Dunkler Graphit-Look */
+QListWidget {
+    border: none;
+    background-color: #090c10;
+    outline: none;
+    padding: 10px;
+}
+
+QListWidget::item {
+    padding: 12px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    color: #8b949e;
+}
+
+QListWidget::item:selected {
+    background-color: #161b22;
+    color: #00aaff; /* Velox Blue */
+    border-left: 4px solid #00aaff;
+    font-weight: bold;
+}
+
+QListWidget::item:hover {
+    background-color: #21262d;
+    color: #f0f6fc;
+}
+
+/* TreeWidget (Paketliste) */
+QTreeWidget {
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    background-color: #0d1117;
+    alternate-background-color: #161b22;
+    outline: none;
+}
+
+QHeaderView::section {
+    background-color: #161b22;
+    padding: 10px;
+    border: none;
+    font-weight: bold;
+    color: #00aaff;
+    border-bottom: 1px solid #30363d;
+}
+
+/* Suchfeld & Inputs */
+QLineEdit {
+    background-color: #090c10;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 10px;
+    color: #f0f6fc;
+}
+
+QLineEdit:focus {
+    border: 1px solid #00aaff;
+}
+
+/* Buttons */
+QPushButton {
+    background-color: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 8px 15px;
+    font-weight: bold;
+    color: #c9d1d9;
+}
+
+QPushButton:hover {
+    background-color: #30363d;
+    border-color: #8b949e;
+}
+
+/* Install/Remove Spezialfarben */
+QPushButton#install {
+    background-color: #00aaff;
+    color: #0d1117;
+    border: none;
+}
+
+QPushButton#install:hover {
+    background-color: #33bbff;
+}
+
+QPushButton#remove {
+    background-color: #da3633;
+    color: white;
+    border: none;
+}
+
+/* Terminal & Progress */
+QProgressBar {
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    text-align: center;
+    background-color: #090c10;
+}
+
+QProgressBar::chunk {
+    background-color: #00aaff;
+}
+
+QPlainTextEdit {
+    background-color: #050505;
+    color: #00aaff;
+    border: 1px solid #30363d;
+    font-family: 'Monospace';
+}

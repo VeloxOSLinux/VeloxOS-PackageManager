@@ -4,22 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a33afc2-f917-4447-aa14-a14bfd19abe2" name="Changes" comment="Initial commit">
-      <change afterPath="$PROJECT_DIR$/core/system_check.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/system_packages.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repos/aur.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repos/cachyos.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/repos/flathub.py" afterDir="false" />
+    <list default="true" id="1a33afc2-f917-4447-aa14-a14bfd19abe2" name="Changes" comment="+ Fill package list with original repo data&#10;+ settings_menu working with installation from yay for AUR-Packages&#10;+ changes at the gui&#10;+ performance-tweaks for loading packages and save to the databasefile">
+      <change afterPath="$PROJECT_DIR$/core/executor.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/style/style.qss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/APM-AnotherPackageManger.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/APM-AnotherPackageManger.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/db.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/aur.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/cachyos.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/flathub.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/system_packages.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/system_packages.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gui/main_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui/main_window.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gui/package_detail.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui/package_detail.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gui/package_list.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui/package_list.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gui/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/icons/cachy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/icons/default.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/icons/firefox.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/icons/gimpicon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/icons/libreoffice.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/icons/spotify.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/icons/vscode.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/repos/cachyos.py" beforeDir="false" afterPath="$PROJECT_DIR$/repos/veloxos.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/repos/flathub.py" beforeDir="false" afterPath="$PROJECT_DIR$/repos/flathub.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +78,7 @@
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/mnt/daten/PythonProjects/APM-AnotherPackageManger/bin&quot;
+    &quot;last_opened_file_path&quot;: &quot;/mnt/data/PythonProjects/APM-AnotherPackageManger/bin&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -136,7 +141,15 @@
       <option name="project" value="LOCAL" />
       <updated>1761596660255</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="+ Fill package list with original repo data&#10;+ settings_menu working with installation from yay for AUR-Packages&#10;+ changes at the gui&#10;+ performance-tweaks for loading packages and save to the databasefile">
+      <option name="closed" value="true" />
+      <created>1761683995967</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1761683995967</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -152,6 +165,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial commit" />
+    <MESSAGE value="+ Fill package list with original repo data&#10;+ settings_menu working with installation from yay for AUR-Packages&#10;+ changes at the gui&#10;+ performance-tweaks for loading packages and save to the databasefile" />
+    <option name="LAST_COMMIT_MESSAGE" value="+ Fill package list with original repo data&#10;+ settings_menu working with installation from yay for AUR-Packages&#10;+ changes at the gui&#10;+ performance-tweaks for loading packages and save to the databasefile" />
   </component>
 </project>
