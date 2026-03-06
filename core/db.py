@@ -4,10 +4,18 @@ from repos.veloxos import VeloxOSRepo
 from repos.flathub import FlathubRepo
 from repos.aur import AURRepo
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "..", "cachy_package_manager.db")
+# --- NEUE PFAD-LOGIK FÜR SYSTEM-INSTALLATION ---
+# Wir speichern die DB im Home-Verzeichnis des Nutzers,
+# da /usr/share/ schreibgeschützt ist.
+HOME = os.path.expanduser("~")
+DB_DIR = os.path.join(HOME, ".local", "share", "velox-package-manager")
+DB_PATH = os.path.join(DB_DIR, "velox_packages.db")
 
 
 def get_connection():
+    """Stellt sicher, dass der Ordner existiert und liefert die Verbindung."""
+    if not os.path.exists(DB_DIR):
+        os.makedirs(DB_DIR, exist_ok=True)
     return sqlite3.connect(DB_PATH)
 
 
@@ -36,15 +44,15 @@ def init_db():
     )
     """)
 
-    # Migration: Falls icon_url fehlt (in existierenden DBs)
+    # Migration: Falls icon_url fehlt
     try:
         cursor.execute("SELECT icon_url FROM packages LIMIT 1")
     except sqlite3.OperationalError:
         print("[DB] Erweitere Schema um icon_url...")
         cursor.execute("ALTER TABLE packages ADD COLUMN icon_url TEXT")
 
-    # Standard-Status setzen
-    for repo in ["Flathub", "AUR", "CachyOS Repo"]:
+    # Standard-Status setzen (Namen an VeloxOS angepasst)
+    for repo in ["Flathub", "AUR", "VeloxOS Repo"]:
         cursor.execute("INSERT OR IGNORE INTO repo_status (repo_name, enabled) VALUES (?, ?)", (repo, 0))
 
     # Prüfung: Sind Daten vorhanden?
@@ -55,10 +63,10 @@ def init_db():
     conn.close()
 
     if count == 0:
-        print("[DB] Datenbank leer. Starte Erstbefüllung...")
+        print("[DB] Datenbank leer. Starte Erstbefüllung im Hintergrund...")
         populate_initial_packages()
     else:
-        print(f"[DB] {count} Pakete bereits in DB vorhanden.")
+        print(f"[DB] {count} Pakete bereits in DB unter {DB_PATH} vorhanden.")
 
 
 def populate_initial_packages():
@@ -66,6 +74,7 @@ def populate_initial_packages():
     conn = get_connection()
     cursor = conn.cursor()
 
+    # Wichtig: Hier die Klassen nutzen, die du in den Repos definiert hast
     repos = [VeloxOSRepo(), FlathubRepo(), AURRepo()]
 
     for repo in repos:
@@ -116,23 +125,10 @@ def set_repo_status(repo_name: str, enabled: bool):
     conn.close()
 
 
-def get_package_description(repo_name: str, package_name: str) -> str:
-    """Wird von PackageDetailWidget benötigt."""
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute(
-        "SELECT description FROM packages WHERE repo_name = ? AND package_name = ?",
-        (repo_name, package_name)
-    )
-    row = cursor.fetchone()
-    conn.close()
-    return row[0] if row else ""
-
-
 def get_package_data(repo_name: str, package_name: str) -> dict:
-    """Liefert alle Paketdetails als Dictionary."""
+    """Liefert alle Paketdetails als Dictionary für die Detail-Ansicht."""
     conn = get_connection()
-    conn.row_factory = sqlite3.Row
+    conn.row_factory = sqlite3.Row  # Erlaubt Zugriff via Key (row['version'])
     cursor = conn.cursor()
     cursor.execute(
         "SELECT version, description, icon_url FROM packages WHERE repo_name = ? AND package_name = ?",
@@ -140,4 +136,7 @@ def get_package_data(repo_name: str, package_name: str) -> dict:
     )
     row = cursor.fetchone()
     conn.close()
-    return dict(row) if row else {"version": "", "description": "", "icon_url": ""}
+
+    if row:
+        return dict(row)
+    return {"version": "Unbekannt", "description": "Keine Daten in lokaler DB.", "icon_url": ""}
