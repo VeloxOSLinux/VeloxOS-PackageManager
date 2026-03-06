@@ -6,3 +6,4 @@ Icon=velox-package-manager
 Terminal=false
 Type=Application
 Categories=System;Settings;
+StartupWMClass=velox-package-manager
