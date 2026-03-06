@@ -5,7 +5,7 @@ It provides a unified interface to install packages from multiple sources, elimi
 
 ## Features
 
-- **CachyOS Repo Integration:** Direct access to optimized CachyOS repositories.
+- **VeloxOS Repo Integration:** Direct access to VeloxOS repositories.
 - **Flathub Support:** Easily install and manage Flatpak applications.
 - **AUR Support:** Seamless integration with the Arch User Repository.
 - **Unified GUI:** A clean, user-friendly graphical interface for all package types.
