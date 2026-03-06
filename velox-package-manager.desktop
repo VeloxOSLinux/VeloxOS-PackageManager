@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=VeloxOS Package Manager
+Comment=Software verwalten und installieren
+Exec=velox-package-manager
+Icon=velox-package-manager
+Terminal=false
+Type=Application
+Categories=System;Settings;
