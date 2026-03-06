@@ -1,40 +1,40 @@
-# APM – AnotherPackageManager
+# VeloxOS Package Manager (VPM)
 
-**APM** ist ein grafischer Paketmanager für **CachyOS**, geschrieben in **Python** mit **PyQt6**.  
-Er ermöglicht die Installation von Paketen aus verschiedenen Quellen über eine einheitliche Oberfläche – ohne mehrere Paketmanager gleichzeitig nutzen zu müssen.
+**VPM** (formerly APM) is the official graphical package manager for **VeloxOS**, written in **Python** using **PyQt6**.  
+It provides a unified interface to install packages from multiple sources, eliminating the need to switch between different package management tools.
 
 ## Features
 
-- Installiere Pakete aus dem **CachyOS-Repo**.
-- Unterstützung für **Flathub**-Pakete.
-- Unterstützung für das **AUR** (Arch User Repository).
-- Einheitliche, benutzerfreundliche grafische Oberfläche.
-- Schnelle Paketinstallation ohne Umwege.
+- **CachyOS Repo Integration:** Direct access to optimized CachyOS repositories.
+- **Flathub Support:** Easily install and manage Flatpak applications.
+- **AUR Support:** Seamless integration with the Arch User Repository.
+- **Unified GUI:** A clean, user-friendly graphical interface for all package types.
+- **High Performance:** Fast package searching and installation without overhead.
 
-## Nutzungsidee
+## How it Works
 
-1. Öffne die App (wenn sie fertiggestellt ist).
-2. Suche nach einem Paket.
-3. Wähle die Quelle (CachyOS Repo, Flathub oder AUR).
-4. Klicke auf **Installieren** und warte, bis die Installation abgeschlossen ist.
+1. Launch the application (once fully released).
+2. Search for your desired package.
+3. Select your preferred source (CachyOS Repo, Flathub, or AUR).
+4. Click **Install** and wait for the process to complete.
 
-## Status
+## Project Status
 
-Das Projekt befindet sich aktuell im Aufbau und ist noch nicht öffentlich zugänglich.  
-Sobald eine erste Version verfügbar ist, werden Installationsanweisungen und weitere Details ergänzt.
+The project is currently under active development and is not yet ready for public production use.  
+Installation instructions and further technical details will be added as soon as the first stable version is available.
 
 ## Contributing
 
-Beiträge und Feedback sind willkommen!  
-Da das Projekt noch in der Entwicklung ist, empfiehlt es sich, sich vorher mit den geplanten Features vertraut zu machen.
+Contributions and feedback are highly welcome!  
+Since the project is in its early stages, we recommend familiarizing yourself with the planned roadmap before submitting major changes.
 
-## Lizenz
+## License
 
-Dieses Projekt ist unter der **GNU General Public License v3.0 (GPLv3)** lizenziert.  
-Das bedeutet:
+This project is licensed under the **GNU General Public License v3.0 (GPLv3)**.  
+In short:
 
-- Jeder darf den Code verwenden, verändern und weiterverbreiten.
-- Abgeleitete Projekte müssen ebenfalls unter GPLv3 veröffentlicht werden.
-- Der ursprüngliche Urheber (APM – AnotherPackageManager) muss erwähnt werden.
+- You are free to use, modify, and redistribute the code.
+- Any derivative works must also be released under the GPLv3.
+- Attribution to the original project (VeloxOS Package Manager) must be maintained.
 
-Die vollständige Lizenz findest du in der [LICENSE](LICENSE)-Datei.
+For more details, please refer to the [LICENSE](LICENSE) file.

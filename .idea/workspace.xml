@@ -4,27 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1a33afc2-f917-4447-aa14-a14bfd19abe2" name="Changes" comment="+ Fill package list with original repo data&#10;+ settings_menu working with installation from yay for AUR-Packages&#10;+ changes at the gui&#10;+ performance-tweaks for loading packages and save to the databasefile">
-      <change afterPath="$PROJECT_DIR$/core/executor.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/style/style.qss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/APM-AnotherPackageManger.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/APM-AnotherPackageManger.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="1a33afc2-f917-4447-aa14-a14bfd19abe2" name="Changes" comment="finalize first beta version">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/db.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/system_packages.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/system_packages.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gui/main_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui/main_window.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gui/package_detail.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui/package_detail.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gui/package_list.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui/package_list.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/icons/cachy.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/icons/default.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/icons/firefox.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/icons/gimpicon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/icons/libreoffice.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/icons/spotify.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/icons/vscode.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/repos/cachyos.py" beforeDir="false" afterPath="$PROJECT_DIR$/repos/veloxos.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repos/flathub.py" beforeDir="false" afterPath="$PROJECT_DIR$/repos/flathub.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +23,7 @@
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
       <list>
+        <option value="timo &lt;admin@veloxos.org&gt;" />
         <option value="HrSkully &lt;timo.rosen@outlook.com&gt;" />
       </list>
     </option>
@@ -53,12 +36,12 @@
     &quot;assignee&quot;: &quot;HrSkully&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/HrSkully/APM-AnotherPackageManager.git&quot;,
-    &quot;accountId&quot;: &quot;0bb88641-9929-46ee-8f58-7426d9a04d1f&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://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@github.com/VeloxOSLinux/VeloxOS-PackageManager",
+    "accountId": "45fb9c3f-0363-4f87-9b8d-01f7e130b282"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -149,7 +132,23 @@
       <option name="project" value="LOCAL" />
       <updated>1761683995967</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="finalize first beta version">
+      <option name="closed" value="true" />
+      <created>1772793437334</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1772793437334</updated>
+    </task>
+    <task id="LOCAL-00004" summary="finalize first beta version">
+      <option name="closed" value="true" />
+      <created>1772793553280</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1772793553280</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -166,6 +165,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial commit" />
     <MESSAGE value="+ Fill package list with original repo data&#10;+ settings_menu working with installation from yay for AUR-Packages&#10;+ changes at the gui&#10;+ performance-tweaks for loading packages and save to the databasefile" />
-    <option name="LAST_COMMIT_MESSAGE" value="+ Fill package list with original repo data&#10;+ settings_menu working with installation from yay for AUR-Packages&#10;+ changes at the gui&#10;+ performance-tweaks for loading packages and save to the databasefile" />
+    <MESSAGE value="finalize first beta version" />
+    <option name="LAST_COMMIT_MESSAGE" value="finalize first beta version" />
   </component>
 </project>
