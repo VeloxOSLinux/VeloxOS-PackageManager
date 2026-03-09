@@ -4,9 +4,7 @@ from repos.veloxos import VeloxOSRepo
 from repos.flathub import FlathubRepo
 from repos.aur import AURRepo
 
-# --- NEUE PFAD-LOGIK FÜR SYSTEM-INSTALLATION ---
-# Wir speichern die DB im Home-Verzeichnis des Nutzers,
-# da /usr/share/ schreibgeschützt ist.
+# --- PFAD-LOGIK ---
 HOME = os.path.expanduser("~")
 DB_DIR = os.path.join(HOME, ".local", "share", "velox-package-manager")
 DB_PATH = os.path.join(DB_DIR, "velox_packages.db")
@@ -51,7 +49,7 @@ def init_db():
         print("[DB] Erweitere Schema um icon_url...")
         cursor.execute("ALTER TABLE packages ADD COLUMN icon_url TEXT")
 
-    # Standard-Status setzen (Namen an VeloxOS angepasst)
+    # Standard-Status setzen
     for repo in ["Flathub", "AUR", "VeloxOS Repo"]:
         cursor.execute("INSERT OR IGNORE INTO repo_status (repo_name, enabled) VALUES (?, ?)", (repo, 0))
 
@@ -63,50 +61,77 @@ def init_db():
     conn.close()
 
     if count == 0:
-        print("[DB] Datenbank leer. Starte Erstbefüllung im Hintergrund...")
+        print("[DB] Datenbank leer. Starte Erstbefüllung...")
         populate_initial_packages()
     else:
-        print(f"[DB] {count} Pakete bereits in DB unter {DB_PATH} vorhanden.")
+        print(f"[DB] {count} Pakete bereits in DB vorhanden.")
 
 
 def populate_initial_packages():
-    """Lädt Pakete von allen Repos und speichert sie effizient."""
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    # Wichtig: Hier die Klassen nutzen, die du in den Repos definiert hast
+    """Lädt Pakete von allen Repos (beim ersten Start)."""
     repos = [VeloxOSRepo(), FlathubRepo(), AURRepo()]
-
     for repo in repos:
-        try:
-            print(f"[DB] Lade Daten von {repo.repo_name}...")
-            packages = repo.get_available_packages()
+        update_single_repo(repo)
 
-            # Massen-Insert vorbereiten
-            data_to_insert = []
-            for p in packages:
-                data_to_insert.append((
-                    repo.repo_name,
-                    p.get("name"),
-                    p.get("version", ""),
-                    p.get("description", ""),
-                    p.get("icon_url", "")
-                ))
 
-            cursor.executemany("""
-                INSERT OR REPLACE INTO packages (repo_name, package_name, version, description, icon_url)
-                VALUES (?, ?, ?, ?, ?)
-            """, data_to_insert)
+def update_single_repo(repo_obj):
+    """
+    NEU: Aktualisiert ein einzelnes Repo in der DB.
+    Kann von der GUI aufgerufen werden, um gezielt zu refreshen.
+    """
+    try:
+        print(f"[DB] Aktualisiere {repo_obj.repo_name}...")
+        packages = repo_obj.get_available_packages()
 
-            print(f"[DB] {len(data_to_insert)} Pakete von {repo.repo_name} gespeichert.")
-        except Exception as e:
-            print(f"[DB] Fehler bei {repo.repo_name}: {e}")
+        conn = get_connection()
+        cursor = conn.cursor()
 
-    conn.commit()
-    conn.close()
+        data_to_insert = []
+        for p in packages:
+            data_to_insert.append((
+                repo_obj.repo_name,
+                p.get("name"),
+                p.get("version", ""),
+                p.get("description", ""),
+                p.get("icon_url", "")
+            ))
+
+        cursor.executemany("""
+            INSERT OR REPLACE INTO packages (repo_name, package_name, version, description, icon_url)
+            VALUES (?, ?, ?, ?, ?)
+        """, data_to_insert)
+
+        conn.commit()
+        conn.close()
+        print(f"[DB] {len(data_to_insert)} Pakete von {repo_obj.repo_name} aktualisiert.")
+    except Exception as e:
+        print(f"[DB] Fehler beim Update von {repo_obj.repo_name}: {e}")
 
 
 # --- Hilfsfunktionen für die GUI ---
+
+def get_all_packages_from_db():
+    """
+    NEU: Lädt ALLES aus der DB in einem Rutsch.
+    Das ist das Geheimnis für den schnellen Start.
+    """
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    # Wir benennen die Spalten im Resultat so um, wie die GUI sie erwartet
+    cursor.execute("""
+        SELECT 
+            repo_name as source, 
+            package_name as name, 
+            version, 
+            description, 
+            icon_url 
+        FROM packages
+    """)
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(row) for row in rows]
+
 
 def get_repo_status(repo_name: str) -> bool:
     conn = get_connection()
@@ -126,9 +151,9 @@ def set_repo_status(repo_name: str, enabled: bool):
 
 
 def get_package_data(repo_name: str, package_name: str) -> dict:
-    """Liefert alle Paketdetails als Dictionary für die Detail-Ansicht."""
+    """Liefert alle Paketdetails."""
     conn = get_connection()
-    conn.row_factory = sqlite3.Row  # Erlaubt Zugriff via Key (row['version'])
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute(
         "SELECT version, description, icon_url FROM packages WHERE repo_name = ? AND package_name = ?",
@@ -139,4 +164,4 @@ def get_package_data(repo_name: str, package_name: str) -> dict:
 
     if row:
         return dict(row)
-    return {"version": "Unbekannt", "description": "Keine Daten in lokaler DB.", "icon_url": ""}
+    return {"version": "Unbekannt", "description": "Keine Daten.", "icon_url": ""}

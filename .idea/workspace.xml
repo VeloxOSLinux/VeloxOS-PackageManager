@@ -7,7 +7,11 @@
     <list default="true" id="1a33afc2-f917-4447-aa14-a14bfd19abe2" name="Changes" comment="finalize first beta version">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/bin/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/velox-package-manager.desktop" beforeDir="false" afterPath="$PROJECT_DIR$/velox-package-manager.desktop" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/main_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui/main_window.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/package_detail.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui/package_detail.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/package_list.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui/package_list.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/repos/veloxos.py" beforeDir="false" afterPath="$PROJECT_DIR$/repos/veloxos.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +66,7 @@
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/mnt/data/PythonProjects/APM-AnotherPackageManger/bin&quot;
+    &quot;last_opened_file_path&quot;: &quot;/mnt/data/PythonProjects/veloxos-welcome-pkg&quot;
   }
 }</component>
   <component name="RecentsManager">

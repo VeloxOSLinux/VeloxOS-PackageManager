@@ -34,7 +34,7 @@ def main():
     app.setDesktopFileName(APP_ID)  # Wichtig für Wayland/GNOME/KDE
 
     # Icon-Pfad berechnen (Nutzt das Logo aus deinem icons/ Ordner)
-    icon_path = os.path.join(BASE_DIR, "icons", "logo.png")
+    icon_path = os.path.join(BASE_DIR, "icons", "default.png")
 
     if os.path.exists(icon_path):
         app_icon = QIcon(icon_path)

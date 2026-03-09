@@ -4,7 +4,7 @@ import re
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QScrollArea, QPlainTextEdit, QProgressBar
 )
-from PyQt6.QtGui import QPixmap, QTextCursor
+from PyQt6.QtGui import QPixmap, QTextCursor, QIcon
 from PyQt6.QtCore import Qt, QProcess
 from core.db import get_package_data
 from repos.flathub import FlathubRepo
@@ -103,8 +103,8 @@ class PackageDetailWidget(QWidget):
         data = self.process.readAllStandardOutput().data().decode(errors='replace')
         self.terminal_output.appendPlainText(data)
         self.terminal_output.moveCursor(QTextCursor.MoveOperation.End)
+        self.terminal_output.ensureCursorVisible()
 
-        # Fortschritt parsen (z.B. pacman oder flatpak % Ausgaben)
         match = re.search(r'(\d+)%', data)
         if match:
             self.progress_bar.setValue(int(match.group(1)))
@@ -156,27 +156,37 @@ class PackageDetailWidget(QWidget):
         source = pkg.get("source", "")
         db_data = get_package_data(source, name)
 
-        # UI Texte setzen
         display_name = name.split(".")[-1] if "." in name else name
         self.title.setText(display_name)
         self.version_label.setText(f"Version: {pkg.get('version', db_data.get('version', 'N/A'))}")
         self.source_label.setText(f"Quelle: {source}")
         self.desc_label.setText(pkg.get("description", db_data.get("description", "Keine Beschreibung verfügbar.")))
 
-        # Status prüfen
         installed = self.is_installed(name, source)
         self.install_btn.setEnabled(not installed)
         self.remove_btn.setEnabled(installed)
 
-        # Icon laden
         pixmap = self.load_icon(name, pkg.get("icon_url", ""))
         self.icon_label.setPixmap(pixmap)
 
-    def load_icon(self, name, icon_url):
-        # Fallback auf lokales Cache/Icon
+    def load_icon(self, name, icon_path):
+        # 1. System-Theme (Pamac-Style)
+        if icon_path.startswith("theme://"):
+            theme_name = icon_path.replace("theme://", "")
+            icon = QIcon.fromTheme(theme_name)
+            if not icon.isNull():
+                return icon.pixmap(80, 80)
+
+        # 2. Absoluter Pfad
+        if icon_path and os.path.isabs(icon_path) and os.path.exists(icon_path):
+            return QPixmap(icon_path)
+
+        # 3. Cache
         clean = "".join([c for c in name if c.isalnum()]).lower()
         cache_path = os.path.join(self.cache_path, f"{clean}.png")
-        if os.path.exists(cache_path): return QPixmap(cache_path)
+        if os.path.exists(cache_path):
+            return QPixmap(cache_path)
 
+        # 4. Fallback zu default.png
         fallback = os.path.join(self.icons_path, "default.png")
         return QPixmap(fallback) if os.path.exists(fallback) else QPixmap()
