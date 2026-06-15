@@ -1,3 +1,5 @@
+[DEPRECATED / ARCHIVED]
+
 # VeloxOS Package Manager (VPM)
 
 **VPM** (formerly APM) is the official graphical package manager for **VeloxOS**, written in **Python** using **PyQt6**.  
